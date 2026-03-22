@@ -1,0 +1,10 @@
+title: "AI와 함께 일하는 시대"
+description: "삼성디스플레이 임직원을 위한 AI 교양서"
+theme: jekyll-theme-cayman
+markdown: kramdown
+exclude:
+  - _workspace
+  - .claude
+  - references
+  - SKILL.md
+  - CLAUDE.md
