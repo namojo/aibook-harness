@@ -18,9 +18,9 @@
   --accent-blue: #5a8fa8;
   --accent-purple-dim: rgba(139,111,192,0.15);
   --accent-blue-dim: rgba(90,143,168,0.15);
-  --text-primary: #e8e4ef;
-  --text-secondary: rgba(232,228,239,0.55);
-  --text-dim: rgba(232,228,239,0.3);
+  --text-primary: #f2f0f7;
+  --text-secondary: rgba(242,240,247,0.7);
+  --text-dim: rgba(242,240,247,0.45);
   --border: rgba(255,255,255,0.06);
   --border-hover: rgba(255,255,255,0.12);
 }
@@ -97,44 +97,112 @@ body {
   transition: width 0.1s linear;
 }
 
-#chapter-nav {
+#sidebar {
   position: fixed;
-  top: 0; left: 0; right: 0;
+  left: 0; top: 0;
+  width: 240px;
+  height: 100vh;
+  background: rgba(6,6,15,0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-right: 1px solid var(--border);
   z-index: 999;
-  display: flex;
-  justify-content: center;
-  gap: 4px;
-  padding: 12px 16px;
-  background: rgba(6,6,15,0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  padding: 2rem 0;
+  transform: translateX(-100%);
+  transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+  overflow-y: auto;
+}
+#sidebar.visible { transform: translateX(0); }
+
+.sidebar-title {
+  padding: 0 1.5rem 1.5rem;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-purple);
+  letter-spacing: 1px;
   border-bottom: 1px solid var(--border);
-  transform: translateY(-100%);
-  transition: transform 0.3s ease;
+  margin-bottom: 1rem;
 }
 
-#chapter-nav.visible {
-  transform: translateY(0);
-}
-
-#chapter-nav a {
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem 1.5rem;
   color: var(--text-dim);
   text-decoration: none;
-  font-size: 13px;
-  padding: 6px 12px;
-  border-radius: 6px;
-  transition: color 0.3s ease, background 0.3s ease;
-  white-space: nowrap;
+  font-size: 14px;
+  transition: all 0.25s ease;
+  border-left: 3px solid transparent;
 }
-
-#chapter-nav a:hover {
+.sidebar-link:hover {
   color: var(--text-secondary);
   background: var(--surface-glass-hover);
 }
-
-#chapter-nav a.active {
+.sidebar-link.active {
   color: var(--accent-purple);
+  border-left-color: var(--accent-purple);
   background: var(--accent-purple-dim);
+}
+.sidebar-link .link-num {
+  font-weight: 700;
+  font-size: 12px;
+  width: 20px;
+  text-align: center;
+  opacity: 0.6;
+}
+
+#hamburger {
+  display: none;
+  position: fixed;
+  top: 12px; left: 12px;
+  z-index: 1001;
+  width: 40px; height: 40px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: rgba(6,6,15,0.85);
+  backdrop-filter: blur(8px);
+  color: var(--text-secondary);
+  font-size: 20px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.3s ease;
+  opacity: 0;
+}
+#hamburger.visible { opacity: 1; }
+
+#sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 998;
+}
+
+body.sidebar-open main { margin-left: 260px; }
+body.sidebar-open footer { margin-left: 260px; }
+body.sidebar-open #hero { margin-left: 0; }
+
+.chapter-image {
+  position: relative;
+  margin: 2rem 0 2.5rem;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.chapter-image img {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  display: block;
+  filter: brightness(0.7) saturate(0.8);
+}
+.chapter-image-fade {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 80px;
+  background: linear-gradient(to bottom, transparent, var(--bg-deep));
+  pointer-events: none;
 }
 
 #hero {
@@ -205,6 +273,7 @@ main {
   max-width: 720px;
   margin: 0 auto;
   padding: 0 1.5rem 4rem;
+  transition: margin-left 0.35s cubic-bezier(0.4,0,0.2,1);
 }
 
 .chapter {
@@ -558,6 +627,7 @@ footer {
   border-top: 1px solid var(--border);
   color: var(--text-dim);
   font-size: 13px;
+  transition: margin-left 0.35s cubic-bezier(0.4,0,0.2,1);
 }
 
 footer p { margin-bottom: 0.5rem; }
@@ -573,9 +643,13 @@ footer p { margin-bottom: 0.5rem; }
   .mfg-flow { flex-direction: column; align-items: center; }
   .mfg-connector { transform: rotate(90deg); padding: 4px 0; }
   .mfg-node { width: 100%; }
-  #chapter-nav { overflow-x: auto; justify-content: flex-start; gap: 2px; padding: 10px 12px; }
-  #chapter-nav a { font-size: 12px; padding: 5px 8px; }
+  #hamburger { display: flex; }
+  #sidebar { width: 260px; }
+  body.sidebar-open main { margin-left: 0; }
+  body.sidebar-open footer { margin-left: 0; }
+  body.sidebar-open #sidebar-overlay { display: block; }
   main { padding: 0 1rem 3rem; }
+  .chapter-image img { height: 200px; }
 }
 
 @media (max-width: 480px) {
@@ -589,14 +663,17 @@ footer p { margin-bottom: 0.5rem; }
 <div class="nebula"></div>
 <div id="progress-bar"></div>
 
-<nav id="chapter-nav">
-  <a href="#ch1">1장</a>
-  <a href="#ch2">2장</a>
-  <a href="#ch3">3장</a>
-  <a href="#ch4">4장</a>
-  <a href="#ch5">5장</a>
-  <a href="#ch6">6장</a>
-</nav>
+<button id="hamburger">&#9776;</button>
+<div id="sidebar-overlay"></div>
+<aside id="sidebar">
+  <div class="sidebar-title">AI와 함께 일하는 시대</div>
+  <a href="#ch1" class="sidebar-link"><span class="link-num">1</span> AI의 여정</a>
+  <a href="#ch2" class="sidebar-link"><span class="link-num">2</span> 생성형 AI</a>
+  <a href="#ch3" class="sidebar-link"><span class="link-num">3</span> 산업별 활용</a>
+  <a href="#ch4" class="sidebar-link"><span class="link-num">4</span> 제조 AI</a>
+  <a href="#ch5" class="sidebar-link"><span class="link-num">5</span> AI 트렌드</a>
+  <a href="#ch6" class="sidebar-link"><span class="link-num">6</span> 준비와 실천</a>
+</aside>
 
 <header id="hero">
   <div class="hero-content">
@@ -617,6 +694,10 @@ footer p { margin-bottom: 0.5rem; }
     <h2>AI의 여정 — 튜링에서 ChatGPT까지</h2>
   </div>
   <blockquote class="key-insight">70년간의 축적이 오늘의 생성형 AI를 만들었다.</blockquote>
+  <div class="chapter-image">
+    <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800&q=80" alt="회로 기판 — AI 역사의 기술적 기반" loading="lazy">
+    <div class="chapter-image-fade"></div>
+  </div>
 
   <div class="timeline fade-in">
     <div class="timeline-item">
@@ -761,6 +842,10 @@ footer p { margin-bottom: 0.5rem; }
     <h2>생성형 AI, 왜 지금 이렇게 중요한가</h2>
   </div>
   <blockquote class="key-insight">AI는 더 이상 소수 전문가의 영역이 아니라, 9억 명이 매주 사용하는 도구가 되었다.</blockquote>
+  <div class="chapter-image">
+    <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80" alt="AI 챗봇 인터페이스 — 생성형 AI 시대" loading="lazy">
+    <div class="chapter-image-fade"></div>
+  </div>
 
   <div class="stat-grid fade-in">
     <div class="stat-card">
@@ -826,6 +911,10 @@ footer p { margin-bottom: 0.5rem; }
     <h2>산업별 AI 활용 — 이미 일어나고 있는 변화</h2>
   </div>
   <blockquote class="key-insight">AI는 전기처럼 모든 산업을 관통하는 범용 기술이다.</blockquote>
+  <div class="chapter-image">
+    <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&q=80" alt="연결된 세계 — 산업별 AI 활용" loading="lazy">
+    <div class="chapter-image-fade"></div>
+  </div>
 
   <div class="industry-grid fade-in">
     <div class="industry-card">
@@ -911,6 +1000,10 @@ footer p { margin-bottom: 0.5rem; }
     <h2>제조 AI — 스마트 팩토리의 핵심 엔진</h2>
   </div>
   <blockquote class="key-insight">같은 장비, 같은 소재라도 AI를 얼마나 잘 활용하느냐에 따라 경쟁력이 달라진다.</blockquote>
+  <div class="chapter-image">
+    <img src="https://images.unsplash.com/photo-1565514020179-026b92b84bb6?w=800&q=80" alt="반도체 공장 — 제조 AI의 현장" loading="lazy">
+    <div class="chapter-image-fade"></div>
+  </div>
 
   <div class="mfg-flow fade-in">
     <div class="mfg-node">
@@ -990,6 +1083,10 @@ footer p { margin-bottom: 0.5rem; }
     <h2>2024~2026 AI 트렌드 — 지금 무엇이 변하고 있는가</h2>
   </div>
   <blockquote class="key-insight">AI는 "더 크게, 더 멀리"에서 "더 가깝게, 더 똑똑하게"로 진화하고 있다.</blockquote>
+  <div class="chapter-image">
+    <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&q=80" alt="AI 두뇌 시각화 — AI 트렌드" loading="lazy">
+    <div class="chapter-image-fade"></div>
+  </div>
 
   <div class="trend-grid fade-in">
     <div class="trend-card">
@@ -1070,6 +1167,10 @@ footer p { margin-bottom: 0.5rem; }
     <h2>생성형 AI 시대, 우리는 어떻게 준비할 것인가</h2>
   </div>
   <blockquote class="key-insight">88%가 AI를 도입했지만, 진짜 성과를 내는 곳은 6% — 차이를 만드는 것은 사람이다.</blockquote>
+  <div class="chapter-image">
+    <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80" alt="팀 협업 — AI 시대의 준비와 실천" loading="lazy">
+    <div class="chapter-image-fade"></div>
+  </div>
 
   <div class="checklist fade-in">
     <label class="check-item">
@@ -1225,8 +1326,11 @@ footer p { margin-bottom: 0.5rem; }
 
   // === Progress bar ===
   const progressBar = document.getElementById('progress-bar');
-  const nav = document.getElementById('chapter-nav');
-  const navLinks = nav.querySelectorAll('a');
+  const sidebar = document.getElementById('sidebar');
+  const sidebarLinks = sidebar.querySelectorAll('.sidebar-link');
+  const hamburger = document.getElementById('hamburger');
+  const sidebarOverlay = document.getElementById('sidebar-overlay');
+  const isMobile = function() { return window.innerWidth <= 768; };
   let heroBottom = 0;
 
   function updateHeroBottom() {
@@ -1235,6 +1339,34 @@ footer p { margin-bottom: 0.5rem; }
   updateHeroBottom();
   window.addEventListener('resize', updateHeroBottom);
 
+  // Hamburger toggle for mobile
+  hamburger.addEventListener('click', function() {
+    const isOpen = sidebar.classList.contains('visible');
+    if (isOpen) {
+      sidebar.classList.remove('visible');
+      document.body.classList.remove('sidebar-open');
+    } else {
+      sidebar.classList.add('visible');
+      document.body.classList.add('sidebar-open');
+    }
+  });
+
+  // Overlay click closes sidebar on mobile
+  sidebarOverlay.addEventListener('click', function() {
+    sidebar.classList.remove('visible');
+    document.body.classList.remove('sidebar-open');
+  });
+
+  // Close sidebar on mobile when a link is clicked
+  sidebarLinks.forEach(function(link) {
+    link.addEventListener('click', function() {
+      if (isMobile()) {
+        sidebar.classList.remove('visible');
+        document.body.classList.remove('sidebar-open');
+      }
+    });
+  });
+
   window.addEventListener('scroll', function() {
     const scrollY = window.scrollY;
     const docH = document.body.scrollHeight - window.innerHeight;
@@ -1242,9 +1374,17 @@ footer p { margin-bottom: 0.5rem; }
     progressBar.style.width = pct + '%';
 
     if (scrollY > heroBottom * 0.6) {
-      nav.classList.add('visible');
+      hamburger.classList.add('visible');
+      if (!isMobile()) {
+        sidebar.classList.add('visible');
+        document.body.classList.add('sidebar-open');
+      }
     } else {
-      nav.classList.remove('visible');
+      hamburger.classList.remove('visible');
+      if (!isMobile()) {
+        sidebar.classList.remove('visible');
+        document.body.classList.remove('sidebar-open');
+      }
     }
   }, { passive: true });
 
@@ -1266,7 +1406,7 @@ footer p { margin-bottom: 0.5rem; }
     entries.forEach(function(entry) {
       if (entry.isIntersecting) {
         const id = entry.target.id;
-        navLinks.forEach(function(a) {
+        sidebarLinks.forEach(function(a) {
           a.classList.toggle('active', a.getAttribute('href') === '#' + id);
         });
       }
